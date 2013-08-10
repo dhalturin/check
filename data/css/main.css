@@ -1,0 +1,17 @@
+.login
+{
+    margin: 0 auto;
+    width: 300px;
+}
+
+.login input
+{
+    padding: 4px 10px;
+    font-size: 8pt;
+    width: 100%;
+}
+
+.menu
+{
+    float: right;
+}
