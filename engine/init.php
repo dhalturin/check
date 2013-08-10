@@ -74,6 +74,7 @@ if($_GET['do'] == 'add')
                 'field' => array(
                     array('host', $_POST['host']),
                     array('proto', $_POST['proto']),
+                    array('interval', $_POST['interval']),
                     array('date_add', time()),
                     array('date_check', 0),
                     array('state', 0),
@@ -96,10 +97,20 @@ if($_GET['do'] == 'add')
 <form method="post" action="">
   <input type="text" name="host" value="" /> - хост<br/>
   <input type="text" name="proto" value="" /> - порт<br/>
+  <select name="interval">
+    <option>15</option>
+    <option>10</option>
+    <option>5</option>
+    <option>1</option>
+  </select> - интервал проверки ресурса в мин.<br/>
   <input type="submit" value="Добавить" />
 </form>
 html;
     }
+}
+else
+{
+print 1;
 }
 }
 

@@ -9,5 +9,5 @@ $_db = array(
     'host' => '127.0.0.1',
     'base' => 'check',
     'user' => 'check',
-    'pass' => '33UwSDSTXNgQr8lnPDu7'
+    'pass' => 'cbsF9nXdrH4nRWQH'
 );
