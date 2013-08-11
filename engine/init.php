@@ -96,7 +96,7 @@ if($_GET['do'] == 'add')
         $_content.= <<<html
 <form method="post" action="">
   <input type="text" name="host" value="" /> - хост<br/>
-  <input type="text" name="proto" value="" /> - порт<br/>
+  <input type="text" name="proto" value="80" onclick="this.select()" /> - порт<br/>
   <select name="interval">
     <option>15</option>
     <option>10</option>
@@ -110,7 +110,49 @@ html;
 }
 else
 {
-print 1;
+
+    $s = $db->select(array(
+        'table' => 'data',
+        'field' => '*',
+        'order' => array('date_check', false),
+        #'debug' => true
+    ));
+
+    $state = array('dont work', 'working', 'updating');
+
+    foreach($s as $k)
+    {
+        $b = array('ff0000', '52d017', '82caff');
+
+        $l = ($k['date_check'] + ($k['interval'] * 60)) - time();
+	$t = array(
+            date('d.m.Y H:i:s', $k['date_check']), ($l > 0 ? $l : 0)
+        );
+
+        $_content.= <<<html
+<table border="1" style="margin-right: 10px; width: 200px; float: left">
+  <tr>
+    <td>
+      <span style="float: right; font-weight: bold">{$k['proto']}</span>
+      {$k['host']}
+    </td>
+  </tr>
+  <tr>
+    <td style="background: #{$b[$k['state']]}">{$state[$k['state']]}</td>
+  </tr>
+  <tr>
+    <td>{$t[0]}</td>
+  </tr>
+  <tr>
+    <td>ETA {$t[1]} sek</td>
+  </tr>
+  <tr>
+    <td>{$k['status']}</td>
+  </tr>
+</tables>
+html;
+    }
+    #$_content.= "<META HTTP-EQUIV=\"REFRESH\" CONTENT=\"1;URL=?\">";
 }
 }
 
