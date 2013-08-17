@@ -110,7 +110,6 @@ html;
 }
 else
 {
-
     $s = $db->select(array(
         'table' => 'data',
         'field' => '*',
@@ -120,6 +119,12 @@ else
 
     $state = array('dont work', 'working', 'updating');
 
+    if($_GET['act'] == 'json')
+    {
+        die(json_encode($s, true));
+    }
+    else
+    {
     foreach($s as $k)
     {
         $b = array('ff0000', '52d017', '82caff');
@@ -153,6 +158,7 @@ else
 html;
     }
     #$_content.= "<META HTTP-EQUIV=\"REFRESH\" CONTENT=\"1;URL=?\">";
+    }
 }
 }
 

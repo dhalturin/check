@@ -53,6 +53,11 @@ while(true)
             'where' => array('id', $k['id']),
             #'debug' => true
 	));
+
+        if($o[0] == 0)
+	{
+            mail('dhalturin@clodo.ru', 'check host ' . $k['host'], 'check host ' . $k['host'] . ', proto ' . $k['proto'] . ', output: ' . $o[1]);
+        }
     }
 
 #    print "\n";

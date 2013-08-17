@@ -3,9 +3,10 @@
 $ch = curl_init();
 $ret = curl_setopt($ch, CURLOPT_URL,            'http://' . $argv[1] . '/?CLODO_MONITORING');
 $ret = curl_setopt($ch, CURLOPT_HEADER,         0);
-$ret = curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
 $ret = curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-$ret = curl_setopt($ch, CURLOPT_TIMEOUT,        4);
+$rey = curl_setopt($ch, CURLOPT_USERAGENT,      'CLODO_MONITORING');
+$ret = curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+$ret = curl_setopt($ch, CURLOPT_TIMEOUT,        30);
 $ret = curl_exec($ch);
 $err = curl_error($ch);
 

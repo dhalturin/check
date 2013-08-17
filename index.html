@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>check site</title>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <script type="text/javascript" src="http://yandex.st/jquery/1.7.1/jquery.js"></script>
+  <link type="text/css" rel="stylesheet" href="./data/css/main.css?1108201304" />
+  <style>
+	body
+	{
+	background: #404040;
+	padding: 0;
+	margin: 0;
+	}
+	.bar
+	{
+	font-size: 2em;
+	line-height: 40px;
+	color: white;
+	text-shadow: 1px 1px 0 black;
+	background: #6a6a6a;
+	background: -webkit-gradient(linear, left top, left bottom, from(#6a6a6a), to(#464646));
+	background: -moz-linear-gradient(top center, #6a6a6a, #464646);
+	height: 40px;
+	text-align: right;
+	border-top: 1px solid #818181;
+	opacity: .9;
+	padding: 0 20px;
+	margin: 0 0 20px 0;
+	}
+	table
+	{
+	float: left;
+	width: 200px;
+	margin: 0 20px 10px 0;
+	display: table;
+	border-collapse: separate;
+	border-spacing: 1px;
+	border-color: gray;
+	background: #4f4f4f;
+	padding: .5em;
+	border-radius: .3em;
+	-moz-border-radius: .3em;
+	}
+	td
+	{
+	padding: 2px 5px;
+	}
+	.working
+	{
+	background: #00b400;
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0.50, #00b400), color-stop(0.50, #018f00));
+	background: -moz-linear-gradient(top center, #00b400 50%, #018f00 50%);
+	color: white;
+	text-shadow: 1px 1px 0 #015f00;
+	}
+	.status_bar
+	{
+	padding-top: 0;
+	background: #d3d3d3;
+	background: -webkit-gradient(linear, left top, left bottom, from(#d3d3d3), to(#bdbdbd));
+	background: -moz-linear-gradient(top center, #d3d3d3, #bdbdbd);
+	color: #181818;
+	text-shadow: 1px 1px 0 #ededed;
+	}
+	.dont_work
+	{
+	background: #af1000;
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0.50, #af1000), color-stop(0.50, #990000));
+	background: -moz-linear-gradient(top center, #af1000 50%, #990000 50%);
+	color: white;
+	text-shadow: 1px 1px 0 #5f0000;
+	}
+	.updating
+	{
+	background: yellow;
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0.50, yellow), color-stop(0.50, #edef00));
+	background: -moz-linear-gradient(top center, yellow 50%, #edef00 50%);
+	color: black;
+	text-shadow: -1px -1px 0 #feff5f;
+	}
+  </style>
+</head>
+<body>
+	<div class="bar">10</div>
+  <script type="text/javascript">
+    $(document).ready(function(){
+		autoRun = function(){
+			check();
+			timer();
+		}
+
+		timer = function(){
+			setTimeout(function(){
+				var t = $('.bar').text()
+				$('.bar').text(--t);
+				
+				if(t == 0)
+				{
+					$('.bar').text(10);
+					check();
+				}
+				timer();
+			}, 1000);
+		}
+
+		    check = function(){
+		    $.ajax({dataType: 'json', url: 'index.php?act=json', data: {}, success: function(json){
+			    var status = ['dont_work', 'working', 'updating'];
+				for(i = 0; i < json.length; i++)
+				{
+				var l_u = new Date(json[i].date_check * 1000);
+				l_u = l_u.getDate() + '.' + (l_u.getMonth()+1) + '.' + l_u.getFullYear() + ' ' + l_u.getHours() + ':' + l_u.getMinutes() + ':' + l_u.getSeconds();
+				var eta = Math.floor(parseInt(json[i].date_check) + (parseInt(json[i].interval) * 60) - new Date()/1000);
+				
+				if($('#host_' + json[i].id).html())
+					{
+						$('#host_' + json[i].id + ' #state').text(status[json[i].state]).removeClass('dont_work working updating').addClass(status[json[i].state]);
+						$('#host_' + json[i].id + ' #last_update').text(l_u);
+						$('#host_' + json[i].id + ' #eta').hide().fadeIn().text(eta);
+						$('#host_' + json[i].id + ' #status').text(json[i].status);
+					}
+					else
+					{
+						$('body').append(
+							'<table id="host_' + json[i].id + '">'+
+							'<tr>'+
+							'<td class="status_bar"><span id="proto" style="float: right">' + json[i].proto + '</span><span id="host">' + json[i].host + '</span></td>'+
+							'</tr>'+
+							'<tr>'+
+							'<td class="' + status[json[i].state] + '" id="state">' + status[json[i].state] + '</td>'+
+							'</tr>'+
+                                                        '<tr>'+
+							'<td class="status_bar" id="last_update">' + l_u  + '</td>'+
+							'</tr>'+
+                                                        '<tr>'+
+							'<td class="status_bar">ETA <span id="eta">' + eta  + '</span> sec</td>'+
+							'</tr>'+
+                                                        '<tr>'+
+							'<td class="status_bar" id="status">' + json[i].status + '</td>'+
+							'</tr>'+
+							'</table>'
+						);
+					}
+				}
+			}});
+		    };
+
+		    autoRun();
+    });
+  </script>
+</body>
+</html>
